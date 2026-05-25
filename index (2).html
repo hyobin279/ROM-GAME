@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>몸을 움직여봐! — 춤추는 별이</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== SCREEN: START ===== -->
+<div id="screen-start" class="screen active">
+  <div class="stars-bg"></div>
+  <div class="start-content">
+    <div class="title-badge">ROM 댄스 게임</div>
+    <h1 class="game-title">몸을 움직여봐!</h1>
+    <div class="character-hero" id="hero-idle">
+      <div class="star-character">
+        <div class="star-body">
+          <div class="face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="smile"></div>
+          </div>
+          <div class="star-arm left idle"></div>
+          <div class="star-arm right idle"></div>
+          <div class="star-leg left idle"></div>
+          <div class="star-leg right idle"></div>
+        </div>
+      </div>
+    </div>
+    <p class="subtitle">별이와 함께 신나게 춤춰보자! 🌟</p>
+    <button class="btn-start" onclick="startGame()">시작하기!</button>
+    <p class="hint">부모님과 함께해요</p>
+  </div>
+</div>
+
+<!-- ===== SCREEN: MISSION ===== -->
+<div id="screen-mission" class="screen">
+  <div class="mission-header">
+    <div class="score-box">
+      ⭐ <span id="score">0</span>점
+    </div>
+    <div class="level-box">
+      레벨 <span id="current-level">1</span>
+    </div>
+    <div class="lives-box" id="lives-display">
+      ❤️❤️❤️
+    </div>
+  </div>
+
+  <div class="mission-body">
+    <!-- Character demo area -->
+    <div class="demo-area">
+      <div class="demo-label">별이를 따라해봐!</div>
+      <div class="character-demo" id="char-demo">
+        <div class="star-character demo-size">
+          <div class="star-body">
+            <div class="face">
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+              <div class="smile"></div>
+            </div>
+            <div class="star-arm left" id="demo-arm-left"></div>
+            <div class="star-arm right" id="demo-arm-right"></div>
+            <div class="star-leg left" id="demo-leg-left"></div>
+            <div class="star-leg right" id="demo-leg-right"></div>
+          </div>
+        </div>
+        <div class="countdown-ring" id="countdown-ring">
+          <svg viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" class="ring-bg"/>
+            <circle cx="40" cy="40" r="34" class="ring-fill" id="ring-progress"/>
+          </svg>
+          <span class="ring-number" id="ring-number">3</span>
+        </div>
+      </div>
+
+      <!-- ROM label -->
+      <div class="rom-label" id="rom-label">
+        <span id="rom-icon">💪</span>
+        <span id="rom-text">어깨를 들어올려요!</span>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="action-area">
+      <p class="action-prompt">나도 따라했어요!</p>
+      <div class="action-buttons">
+        <button class="btn-action" id="btn-done" onclick="markDone()">
+          <span class="btn-icon">✅</span>
+          <span>했어요!</span>
+        </button>
+        <button class="btn-action secondary" id="btn-skip" onclick="skipMove()">
+          <span class="btn-icon">⏭️</span>
+          <span>어려워요</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-wrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-text" id="progress-text">0 / 5</span>
+  </div>
+</div>
+
+<!-- ===== SCREEN: SUCCESS FEEDBACK ===== -->
+<div id="screen-success" class="screen">
+  <div class="feedback-content">
+    <div class="feedback-character celebrate">
+      <div class="star-character">
+        <div class="star-body">
+          <div class="face happy">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="smile big"></div>
+          </div>
+          <div class="star-arm left raised"></div>
+          <div class="star-arm right raised"></div>
+          <div class="star-leg left"></div>
+          <div class="star-leg right"></div>
+        </div>
+      </div>
+    </div>
+    <div class="burst-fx" id="burst-fx"></div>
+    <h2 class="feedback-title" id="feedback-title">잘했어요! 🎉</h2>
+    <p class="feedback-msg" id="feedback-msg">어깨가 쑥쑥 자라고 있어요!</p>
+    <div class="stars-earned" id="stars-earned">⭐⭐⭐</div>
+    <button class="btn-next" onclick="nextMove()">다음 동작!</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN: LEVEL COMPLETE ===== -->
+<div id="screen-level-complete" class="screen">
+  <div class="level-complete-content">
+    <div class="trophy-anim">🏆</div>
+    <h2>레벨 클리어!</h2>
+    <p class="level-score">이번 레벨 점수: <strong id="level-score-val">0</strong>점</p>
+    <div class="body-progress">
+      <p>오늘 운동한 부위</p>
+      <div class="body-parts" id="body-parts-done"></div>
+    </div>
+    <button class="btn-start" onclick="nextLevel()">다음 레벨 🚀</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN: GAME OVER ===== -->
+<div id="screen-gameover" class="screen">
+  <div class="gameover-content">
+    <div class="tired-char">
+      <div class="star-character">
+        <div class="star-body tired">
+          <div class="face tired-face">
+            <div class="eye left closed"></div>
+            <div class="eye right closed"></div>
+            <div class="mouth tired"></div>
+          </div>
+          <div class="star-arm left droop"></div>
+          <div class="star-arm right droop"></div>
+        </div>
+      </div>
+    </div>
+    <h2>오늘도 잘했어요! 😊</h2>
+    <p>총 점수: <strong id="final-score">0</strong>점</p>
+    <p class="encouragement">내일 또 별이와 함께 운동해요!</p>
+    <button class="btn-start" onclick="resetGame()">다시 하기!</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
